@@ -1,8 +1,8 @@
 defmodule ListFilter do
 
   def call(list) do
-
-    lista = Enum.flat_map(list, fn string ->
+    list
+      |> Enum.flat_map( fn string ->
               case Integer.parse(string) do
                 # transform to integer
                 {int, _rest} -> [int]
@@ -10,8 +10,8 @@ defmodule ListFilter do
                 :error -> []
               end
           end)
-    Enum.count(lista, fn x -> rem(x,2) == 1 end)
-   
+      |> Enum.count(fn x -> rem(x,2) == 1 end)
+
 
   end
 
