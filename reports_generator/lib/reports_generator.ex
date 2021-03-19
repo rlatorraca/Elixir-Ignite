@@ -1,6 +1,8 @@
 defmodule ReportsGenerator do
   alias ReportsGenerator.Parser
 
+  # Variaveis de Moduloa (Acesso apenas dentro desse modulo)
+  # 01
   @available_plates [
     "açaí",
     "churrasco",
@@ -11,6 +13,12 @@ defmodule ReportsGenerator do
     "prato_feito",
     "sushi"
 
+  ]
+
+  # 02
+  @options [
+    "plates",
+    "users"
   ]
 
   def build (filename) do
@@ -35,6 +43,7 @@ defmodule ReportsGenerator do
     #   |> Map.put("users",users)
     #   |> Map.put("plates", plates)
 
+    # retorna o "report atualizando o "users"and "plates
     %{ report | "users" => users, "plates" => plates}
   end
 
@@ -47,5 +56,9 @@ defmodule ReportsGenerator do
   end
 
   # Return the user that spent more money in purchases
-  def fetch_higher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end )
+  def fetch_higher_cost(report, option ) when option in @options do
+    {:ok, Enum.max_by(report[option], fn {_key, value} -> value end )}
+  end
+
+  def fetch_higher_cost(_report, _option ), do: {"error", "Invalid option!"}
 end
