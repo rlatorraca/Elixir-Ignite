@@ -59,6 +59,18 @@ defmodule ReportsGeneratorTest do
       # ASSERTION
       assert response == expected_response
     end
+
+    test "when no list of files provided, returns an error message" do
+      # SET UP
+
+      # EXCERCISE
+      response = ReportsGenerator.build_paralel("no_file")
+
+      expected_response = {:error, "Please enter a list of files to be processed"}
+
+      # ASSERTION
+      assert response == expected_response
+    end
   end
 
   describe "build/1" do
