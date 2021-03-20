@@ -65,12 +65,19 @@ defmodule ReportsGenerator do
   ##
   ########################################################################################
 
+  def build_paralel(file_names) when not is_list(file_names) do
+    {:error, "Please enter a list of files to be processed"}
+  end
+
   def build_paralel(file_names) do
-    file_names
-    |> Task.async_stream(&build/1)
-    |> Enum.reduce(report_accumulator(), fn {:ok, result_report}, old_report ->
-      sum_reports(old_report, result_report)
-    end)
+    result =
+      file_names
+      |> Task.async_stream(&build/1)
+      |> Enum.reduce(report_accumulator(), fn {:ok, result_report}, old_report ->
+        sum_reports(old_report, result_report)
+      end)
+
+    {:ok, result}
   end
 
   defp sum_reports(%{"plates" => old_plates, "users" => old_users}, %{
