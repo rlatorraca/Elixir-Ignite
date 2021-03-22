@@ -17,7 +17,7 @@ defmodule ReportsGeneratorChallenge do
    @months [
      "janeiro",
      "fevereiro",
-     "março"
+     "março",
      "abril",
      "maior",
      "junho",
@@ -48,25 +48,29 @@ defmodule ReportsGeneratorChallenge do
   end
 
 
-  defp sum_values([names, hours_worked, day, month, year], %{"all_hours" => all_hours, "hours_per_month" => hours_per_month} = report) do
-    all_hours = Map.put(all_hours, names, all_hours[names] + hours_worked)
-    hours_per_month =   Map.put(hours_per_month, names, all_hours[names] + hours_worked)
+  defp sum_values([id, hours_worked, day, month, year], %{"all_hours" => all_hours, "hours_per_month" => hours_per_month, "hours_per_year" => hours_per_year} = report) do
+    all_hours = Map.put(all_hours, id, all_hours[id] + hours_worked)
+    hours_per_month =  put_in(hours_per_month[id][month], all_hours[month] + hours_worked)
+    hours_per_year = put_in(hours_per_year[id][year], hours_per_year[id][year] + hours_worked)
+
     #plates = Map.put(plates, food_name, plates[food_name] + 1)
 
-    %{report | "all_hours" => all_hours}
+    %{report | "all_hours" => all_hours, "hours_per_month" => hours_per_month, "hours_per_years" => hours_per_year}
   end
 
 
   defp report_accumulator do
     all_hours= Enum.into(@available_users, %{}, &{&1, 0})
+    hours_per_month = Enum.reduce(@available_users, %{ }, fn {name, _value}, acc -> Map.put(acc, name, @months) end)
+    hours_per_year = Enum.reduce(@available_users, %{ }, fn {name, _value}, acc -> Map.put(acc, name, @years) end)
     #users = Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
 
     # %{"plates" => plates, "users" => users}
-    build_reports(all_hours)
+    build_reports(all_hours, hours_per_month , hours_per_year )
   end
 
 
-   defp build_reports(all_hours) do
-    %{"all_hours" => all_hours}
+   defp build_reports(all_hours, hours_per_month , hours_per_year ) do
+    %{"all_hours" => all_hours, "hours_per_month" => hours_per_month , "hours_per_year" => hours_per_year}
   end
 end
