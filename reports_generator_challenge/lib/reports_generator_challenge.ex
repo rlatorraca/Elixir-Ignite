@@ -1,76 +1,83 @@
 defmodule ReportsGeneratorChallenge do
   alias ReportsGeneratorChallenge.Parser
 
-   @available_users [
-     "Cleiton",
-     "Daniele",
-     "Danilo",
-     "Diego",
-     "Giuliano",
-     "Jakeliny",  
-     "Joseph",      
-     "Mayk",     
-     "Rafael",
-     "Vinicius"
-   ]
+  @names [
+    "daniele",
+    "mayk",
+    "giuliano",
+    "cleiton",
+    "jakeliny",
+    "joseph",
+    "diego",
+    "rafael",
+    "vinicius",
+    "danilo"
+  ]
 
-   @months [
-     "janeiro",
-     "fevereiro",
-     "março",
-     "abril",
-     "maior",
-     "junho",
-     "julho",
-     "agosto",
-     "setembro",
-     "outubro",
-     "novemnbro",
-     "dezembro"
-   ]
+  @months [
+    "janeiro",
+    "fevereiro",
+    "março",
+    "abril",
+    "maio",
+    "junho",
+    "julho",
+    "agosto",
+    "setembro",
+    "outubro",
+    "novembro",
+    "dezembro"
+  ]
 
-   @years [
-     "2016",
-     "2017",
-     "2018",
-     "2019",
-     "2020",
-     "2021",
-   ]
+  @filename "reports/gen_report.csv"
 
-  def build(filename) do
-  
-    filename
+  def build() do
+    @filename
     |> Parser.parse_file()
     |> Enum.reduce(report_accumulator(), fn line, report ->
       sum_values(line, report)
     end)
   end
 
+  defp sum_map(map, id, date, hours),
+    do: put_in(map[id], Map.put(map[id], date, map[id][date] + hours))
 
-  defp sum_values([id, hours_worked, day, month, year], %{"all_hours" => all_hours, "hours_per_month" => hours_per_month, "hours_per_year" => hours_per_year} = report) do
+  defp sum_values(
+         [id, hours_worked, _day, month, year],
+         %{
+           "all_hours" => all_hours,
+           "hours_per_month" => hours_per_month,
+           "hours_per_year" => hours_per_year
+         }
+       ) do
     all_hours = Map.put(all_hours, id, all_hours[id] + hours_worked)
-    hours_per_month =  put_in(hours_per_month[id][month], all_hours[month] + hours_worked)
-    hours_per_year = put_in(hours_per_year[id][year], hours_per_year[id][year] + hours_worked)
+    hours_per_month = sum_map(hours_per_month, id, month, hours_worked)
+    hours_per_year = sum_map(hours_per_year, id, year, hours_worked)
 
-    #plates = Map.put(plates, food_name, plates[food_name] + 1)
-
-    %{report | "all_hours" => all_hours, "hours_per_month" => hours_per_month, "hours_per_years" => hours_per_year}
+    %{
+      "all_hours" => all_hours,
+      "hours_per_month" => hours_per_month,
+      "hours_per_year" => hours_per_year
+    }
   end
-
 
   defp report_accumulator do
-    all_hours= Enum.into(@available_users, %{}, &{&1, 0})
-    hours_per_month = Enum.reduce(@available_users, %{ }, fn {name, _value}, acc -> Map.put(acc, name, @months) end)
-    hours_per_year = Enum.reduce(@available_users, %{ }, fn {name, _value}, acc -> Map.put(acc, name, @years) end)
-    #users = Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
+    month_list = Enum.into(@months, %{}, &{&1, 0})
+    year_list = Enum.into(2016..2021, %{}, &{&1, 0})
 
-    # %{"plates" => plates, "users" => users}
-    build_reports(all_hours, hours_per_month , hours_per_year )
+    %{"all_hours" => %{}, "hours_per_month" => %{}, "hours_per_year" => %{}}
+    |> Map.put("all_hours", accumulator_id_map_generator(0))
+    |> Map.put("hours_per_month", accumulator_id_map_generator(month_list))
+    |> Map.put("hours_per_year", accumulator_id_map_generator(year_list))
   end
 
+  defp accumulator_id_map_generator(value), do: Enum.into(@names, %{}, &{&1, value})
 
-   defp build_reports(all_hours, hours_per_month , hours_per_year ) do
-    %{"all_hours" => all_hours, "hours_per_month" => hours_per_month , "hours_per_year" => hours_per_year}
+  defp build_reports(all_hours, hours_per_month, hours_per_year) do
+    %{
+      "all_hours" => all_hours,
+      "hours_per_month" => hours_per_month,
+      "hours_per_year" => hours_per_year
+    }
   end
 end
