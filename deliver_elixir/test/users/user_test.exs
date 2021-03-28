@@ -2,6 +2,8 @@ defmodule DeliverElixir.Users.UserTest do
   use ExUnit.Case
   alias DeliverElixir.Users.User
 
+  import DeliverElixir.Factory
+
   describe "build/5" do
     test "if all parameters are valid ones, return instance of user" do
       response =
@@ -13,15 +15,7 @@ defmodule DeliverElixir.Users.UserTest do
           45
         )
 
-      expected_response =
-        {:ok,
-         %User{
-           address: "Rua das mandiocas,n. 1022, Bairro Comercial 1",
-           age: 45,
-           cpf: "14785236978",
-           email: "rlsp@gmail.com",
-           name: "Rodrigo L S Pires"
-         }}
+      expected_response = {:ok, build(:user)}
 
       assert response == expected_response
     end
