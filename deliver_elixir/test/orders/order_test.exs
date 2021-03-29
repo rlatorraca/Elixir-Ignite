@@ -2,6 +2,7 @@ defmodule DeliverElixir.Orders.OrderTest do
   use ExUnit.Case
 
   alias DeliverElixir.Orders.Order
+  # alias DeliverElixir.Orders.Order , as: NOME
 
   import DeliverElixir.Factory
 
