@@ -9,6 +9,11 @@ defmodule DeliverElixir.Users.CreateOrUpdate do
     |> save_user()
   end
 
-  defp save_user({:ok, %User{} = user}), do: UserAgent.save(user)
+  defp save_user({:ok, %User{} = user}) do
+    UserAgent.save(user)
+
+    {:ok, "User added sucessfully"}
+  end
+
   defp save_user({:error, _reason} = error), do: error
 end

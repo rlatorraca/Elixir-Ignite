@@ -8,7 +8,7 @@ defmodule DeliverElixir.Users.UserTest do
     test "if all parameters are valid ones, return instance of user" do
       response =
         User.build(
-          "Rodrigo L S Pires",
+          "RLSP",
           "Rua das mandiocas,n. 1022, Bairro Comercial 1",
           "rlsp@gmail.com",
           "14785236978",
@@ -23,7 +23,7 @@ defmodule DeliverElixir.Users.UserTest do
     test "if all parameters are not valid ones, return an error" do
       response =
         User.build(
-          "Rodrigo L S Pires",
+          "RLSP",
           "Rua das mandiocas,n. 1022, Bairro Comercial 1",
           "rlsp@gmail.com",
           "14785236978",

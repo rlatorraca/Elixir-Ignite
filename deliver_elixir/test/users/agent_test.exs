@@ -35,7 +35,7 @@ defmodule DeliverElixir.Users.AgentTest do
            age: 45,
            cpf: "741258963",
            email: "rlsp@gmail.com",
-           name: "Rodrigo L S Pires"
+           name: "RLSP"
          }}
 
       assert response == expected_response

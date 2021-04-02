@@ -6,7 +6,7 @@ defmodule DeliverElixir.Factory do
 
   def user_factory do
     %User{
-      name: "Rodrigo L S Pires",
+      name: "RLSP",
       address: "Rua das mandiocas,n. 1022, Bairro Comercial 1",
       email: "rlsp@gmail.com",
       cpf: "14785236978",
