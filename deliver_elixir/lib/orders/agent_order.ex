@@ -15,9 +15,12 @@ defmodule DeliverElixir.Orders.Agent do
 
   def get(uuid), do: Agent.get(__MODULE__, &get_order(&1, uuid))
 
+  # & &1 => retorna todos os ESTADOS (todos usuarios)
+  def list_all, do: Agent.get(__MODULE__, & &1)
+
   defp get_order(state, uuid) do
     case Map.get(state, uuid) do
-      nil -> {:error, "Order ot found"}
+      nil -> {:error, "Order not found"}
       order -> {:ok, order}
     end
   end
