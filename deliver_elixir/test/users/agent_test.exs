@@ -15,14 +15,18 @@ defmodule DeliverElixir.Users.AgentTest do
   end
 
   describe "get/1" do
-    test "check out if an user is saved, returns the user wanted" do
-      UserAgent.start_link({})
+    setup do
+      UserAgent.start_link(%{})
+      cpf = "741258963"
+      {:ok, cpf: cpf}
+    end
 
+    test "check out if an user is saved, returns the user wanted", %{cpf: cpf} do
       :user
-      |> build(cpf: "741258963")
+      |> build(cpf: cpf)
       |> UserAgent.save()
 
-      response = UserAgent.get("741258963")
+      response = UserAgent.get(cpf)
 
       expected_response =
         {:ok,
@@ -38,8 +42,6 @@ defmodule DeliverElixir.Users.AgentTest do
     end
 
     test "check out if an user is not saved, returns an error" do
-      UserAgent.start_link({})
-
       response = UserAgent.get("1010101010")
 
       expected_response = {:error, "User not found"}
