@@ -19,10 +19,10 @@ defmodule DeliverElixir.Orders.Report do
   defp order_string(%Order{user_cpf: cpf, items: items, total_price: total_price}) do
     # fn item -> item_string(item) end
     items_string = Enum.map(items, &item_string(&1))
-    "#{cpf},#{items_string},#{total_price}\n"
+    "#{cpf},#{items_string}#{total_price}\n"
   end
 
   defp item_string(%Item{category: category, quantity: quantity, unity_price: unity_price}) do
-    "#{category},#{quantity},#{unity_price}"
+    "#{category},#{quantity},#{unity_price},"
   end
 end
