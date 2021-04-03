@@ -25,7 +25,8 @@ defmodule DeliverElixir.Orders.ReportTest do
 
       expected_response =
         "14785236978,pizza,3,10.55,meat,4,23.45,125.45\n" <>
-          "14785236978,pizza,3,10.55,meat,4,23.45,125.45\n14785236978,pizza,3,10.55,meat,4,23.45,125.45\n"
+        "14785236978,pizza,3,10.55,meat,4,23.45,125.45\n <>
+        "14785236978,pizza,3,10.55,meat,4,23.45,125.45\n"
 
       Report.create("report_test.csv")
 
