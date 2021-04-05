@@ -7,7 +7,11 @@ defmodule DeliverElixir.Users.Agent do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
-  def save(%User{} = user), do: Agent.update(__MODULE__, &update_state(&1, user))
+  def save(%User{} = user) do
+    uuid = UUID.uuid4()
+    Agent.update(__MODULE__, &update_state(&1, user, ))
+    {:ok, uuid}
+  end
 
   def get(cpf), do: Agent.get(__MODULE__, &get_user(&1, cpf))
 
@@ -29,5 +33,5 @@ defmodule DeliverElixir.Users.Agent do
   # defp handle_get(nil), do: {:error, "USer not found"}
   # defp handle_get(user), do: {:ok, user}
 
-  defp update_state(state, %User{cpf: cpf} = user), do: Map.put(state, cpf, user)
+  defp update_state(state, %User{} = user, uuid), do: Map.put(state, user, uuid)
 end
